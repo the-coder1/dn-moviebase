@@ -16,7 +16,23 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 
 const MenuItem = ({ href, children, ...props }) => (
   <Link href={href} passHref>
-    <Button as="a" variant="link" {...props}>
+    <Button 
+      color="white" 
+      as="a" 
+      variant="link" 
+      p="3"
+      transition="0.25s"
+      {...props} 
+      _hover={{
+        textDecoration: 'none',
+        color: 'green.700',
+        backgroundColor: 'white',
+        boxShadow: 'md'
+       }}
+      _focus={{
+        outline: 'none'
+      }}
+      >
       {children}
     </Button>
   </Link>
@@ -26,14 +42,14 @@ function Header() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Box bg="purple.500">
+    <Box bg="green.700">
       <Container>
         <Stack
           as="nav"
           direction={['column', , 'row']}
           justify="space-between"
           wrap="wrap"
-          py="1.5rem"
+          py="0.5rem"
         >
           <HStack justify="space-between">
             <MenuItem href="/" mr={8}>
@@ -41,8 +57,19 @@ function Header() {
             </MenuItem>
 
             <Box display={['block', , 'none']} onClick={onToggle}>
-              <Button variant="outline">
-                <HamburgerIcon />
+              <Button 
+                variant="outline"
+                p="2"
+                _focus={{
+                  outline: 'none'
+                }} 
+                _hover={{
+                  color: 'green.700',
+                  backgroundColor: 'white',
+                  boxShadow: 'md'
+                }}
+              >
+                <HamburgerIcon w='6' h="6" />
               </Button>
             </Box>
           </HStack>
@@ -55,21 +82,26 @@ function Header() {
             spacing={4}
           >
             <MenuItem href="/search">Search</MenuItem>
-            <MenuItem href="/" disabled>
+            <MenuItem href="/watchlist">
               Watchlist
             </MenuItem>
-            <MenuItem href="/" disabled>
+            <MenuItem href="/history">
               History
             </MenuItem>
           </Stack>
 
           <Spacer />
 
-          <Box display={[isOpen ? 'block' : 'none', , 'block']}>
-            <MenuItem href="/" variant="outline" disabled>
+          <Stack
+            direction={['column', , 'row']}
+            justify="start"
+            align={['start', , 'center']}
+            display={[isOpen ? 'flex' : 'none', , 'flex']}
+          >
+            <MenuItem href="/" variant="outline">
               What to watch
             </MenuItem>
-          </Box>
+          </Stack>
         </Stack>
       </Container>
     </Box>

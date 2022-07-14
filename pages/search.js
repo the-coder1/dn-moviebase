@@ -6,18 +6,20 @@ import {
   Input,
   IconButton,
   Container,
-  UnorderedList,
-  ListItem,
-  Progress,
+  Spinner,
   Text,
   InputGroup,
   InputRightElement,
   VStack,
-  Button,
-  Badge,
+  Box,
+  Wrap,
+  Image,
+  Flex,
+  Stack,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Layout from '../components/Layout';
+import { buildImageUrl } from '../utils/api';
 
 function SearchBar() {
   const router = useRouter();
@@ -43,12 +45,26 @@ function SearchBar() {
         placeholder="Search for a movie..."
         value={text}
         onChange={(event) => setText(event.target.value)}
+        borderColor='green.600'
+        _focus={{
+          outline: 'none'
+        }}
       />
       <InputRightElement>
         <IconButton
           aria-label="Search for a movie"
           icon={<SearchIcon />}
           type="submit"
+          color='black'
+          bg='green.600'
+          transition="0.25s"
+          _hover={{
+            transform: 'scale(1.2)',
+            color: 'white'
+          }}
+          _focus={{
+            outline: 'none'
+          }}
         />
       </InputRightElement>
     </InputGroup>
@@ -69,27 +85,42 @@ function SearchResults() {
     );
   }
   if (!data) {
-    return <Progress size="xs" isIndeterminate />;
+    return <Spinner color='green.700' size="lg" isIndeterminate />;
   }
   if (!data.results.length) {
     return <Text>No results</Text>;
   }
+  console.log(data)
   return (
-    <UnorderedList stylePosition="inside">
-      {data.results.map(({ id, title, release_date }) => (
-        <ListItem key={id}>
+    <Flex align="center" wrap="wrap" justify="space-around">
+      {data.results.map(({ id, title, poster_path }) => (
+        <Box key={id} boxShadow="md" bg="green.700" mx="3" my="6" borderRadius="lg" transition="0.25s" _hover={{
+          cursor: 'pointer',
+          transform: 'scale(1.1)'
+        }}>
           <Link href={`/movies/${id}`} passHref>
-            <Button
-              as="a"
-              variant="link"
-              rightIcon={<Badge>{release_date}</Badge>}
-            >
-              <Text as="span">{title} </Text>
-            </Button>
+            <Flex w="auto" direction="column" align="center" p="3">
+              {poster_path && 
+                <Box minW="200px">
+                  <Image
+                    src={buildImageUrl(poster_path, 'w200')}
+                    alt="Movie poster"
+                    layout="responsive"
+                    width="200"
+                    height="350"
+                    objectFit="contain"
+                    unoptimized
+                    borderRadius="lg"
+                    boxShadow="md"
+                  />
+                </Box>
+              }
+              <Text maxW="200" align="center" mt={poster_path ? "2" : '0'}>{title}</Text>
+            </Flex>
           </Link>
-        </ListItem>
+        </Box>
       ))}
-    </UnorderedList>
+    </Flex>
   );
 }
 

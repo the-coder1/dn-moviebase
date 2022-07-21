@@ -1,5 +1,6 @@
 import { fetcher } from '../../../utils/api';
 import History from '../../../models/History';
+import Watchlist from '../../../models/Watchlist';
 import dbConnect from '../../../utils/dbConnect';
 
 const getMovieUrl = (id) =>
@@ -22,13 +23,16 @@ export default async function handler(req, res) {
   } else if (method === 'PUT') {
     const movie = await fetcher(getMovieUrl(id));
 
-    const history = new History({ id, title: movie.title });
+    const history = new History({ id, title: movie.title, poster_path: movie.poster_path });
+
     await history.save();
+    await Watchlist.deleteOne({ id })
 
     res.status(200).json(movie);
   } else if (method === 'DELETE') {
     await History.deleteOne({ id });
-    res.status(200).end('Ok');
+    
+    res.status(200).json({});
   }
   res.status(400).end();
 }

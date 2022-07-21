@@ -1,64 +1,227 @@
-import { Center, Box, Link, Flex, Image, Text, Skeleton } from '@chakra-ui/react';
+import { Center, Container, Spinner } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import useSWR from 'swr';
-import { buildImageUrl } from '../utils/api';
+import FirstMovies from '../components/FirstMovies';
+import TextMessage from '../components/TextMessage';
+import ContainerContent from '../components/ContainerContent';
 
-const MoviesContent = () => {
-  const { data, error } = useSWR('/api')
 
-  if (error) {
+const WatchMovies = () => {
+  const { data, error } = useSWR('/api/watchlist')
+
+  if(error) {
     return (
-      <Text color="red">
-        Error fetching movies: {JSON.stringify(error)}
-      </Text>
-    );
+      <ContainerContent 
+        message="Movies to watch"
+        content={
+          <TextMessage 
+            statusAlert="error"
+            startSlide={error} 
+            message={`Error fetching movies: ${JSON.stringify(error)}`} 
+          />
+        }
+      />
+    )
   }
-  if(!data){
-    return <Skeleton width="300px" height="450px" m="3"></Skeleton>
+
+  if(!data) {
+    return (
+      <ContainerContent 
+        message="Movies to watch"
+        content={
+          <Center height="200px">
+            <Spinner 
+              color='teal.500' 
+              size='xl' 
+              thickness='3px' 
+              emptyColor='gray.200' 
+              speed='0.5s' 
+            />
+          </Center>
+        }
+      />
+    )
   }
-  if (data.success === false) {
-    return <Text color="red">{data.status_message}</Text>;
+
+  if(!data.length){
+    return (
+      <ContainerContent 
+        message="Movies to watch"
+        content={
+          <TextMessage
+            statusAlert="info"
+            startSlide={!data.length}
+            message="You haven't added any movies to the viewing section!"
+          />
+        }
+      />
+    )
   }
 
   return (
-    <Flex align="center" wrap="wrap" justify="space-around">
-      {data.results.map(({ id, title, poster_path }) => (
-        <Box key={id} boxShadow="md" bg="green.700" mx="3" my="6" borderRadius="lg" transition="0.25s" _hover={{
-          cursor: 'pointer',
-          transform: 'scale(1.1)'
-        }}>
-          <Link _hover={{ textDecoration: 'none' }} href={`/movies/${id}`} passHref>
-            <Flex w="auto" direction="column" align="center" p="3">
-              {poster_path && 
-                <Box minW="200px">
-                  <Image
-                    src={buildImageUrl(poster_path, 'w200')}
-                    alt="Movie poster"
-                    layout="responsive"
-                    width="200"
-                    height="350"
-                    objectFit="contain"
-                    unoptimized
-                    borderRadius="lg"
-                    boxShadow="md"
-                  />
-                </Box>
-              }
-              <Text maxW="200" align="center" mt={poster_path ? "2" : '0'}>{title}</Text>
-            </Flex>
-          </Link>
-        </Box>
-      ))}
-    </Flex>
+    <ContainerContent 
+      message="Movies to watch"
+      content={
+        <FirstMovies
+          wrapMovies="nowrap"
+          alignMovies="center"
+          justifyMovies="start"
+          dataMovies={data} 
+          widthMovies="200px"
+          heightMovies="300px"
+        />
+      }
+    />
+  )
+}
+
+const HistoryMovies = () => {
+  const { data, error } = useSWR('/api/history')
+
+  if(error) {
+    return (
+      <ContainerContent 
+        message="Movies watched"
+        content={
+          <TextMessage 
+            statusAlert="error"
+            startSlide={error} 
+            message={`Error fetching movies: ${JSON.stringify(error)}`} 
+          />
+        }
+      />
+    )
+  }
+
+  if(!data) {
+    return (
+      <ContainerContent 
+        message="Movies watched"
+        content={
+          <Center height="200px">
+            <Spinner 
+              color='teal.500' 
+              size='xl' 
+              thickness='3px' 
+              emptyColor='gray.200' 
+              speed='0.5s' 
+            />
+          </Center>
+        }
+      />
+    )
+  }
+
+  if(!data.length){
+    return (
+      <ContainerContent 
+        message="Movies watched"
+        content={
+          <TextMessage
+            statusAlert="info"
+            startSlide={!data.length}
+            message="You haven't added any movies to the history section!"
+          />
+        }
+      />
+    )
+  }
+
+  return (
+    <ContainerContent 
+      message="Watched movies"
+      content={
+        <FirstMovies
+          wrapMovies="nowrap"
+          alignMovies="center"
+          justifyMovies="start"
+          dataMovies={data} 
+          widthMovies="200px"
+          heightMovies="300px"
+        />
+      }
+    />
+  )
+}
+
+const PopularMovies = () => {
+  const { data, error } = useSWR('/api')
+
+  if(error) {
+    return (
+      <ContainerContent 
+        message="Popular movies"
+        content={
+          <TextMessage 
+            statusAlert="error"
+            startSlide={error} 
+            message={`Error fetching movies: ${JSON.stringify(error)}`} 
+          />
+        }
+      />
+    )
+  }
+
+  if(!data) {
+    return (
+      <ContainerContent 
+        message="Popular movies"
+        content={
+          <Center height="200px">
+            <Spinner 
+              color='teal.500' 
+              size='xl' 
+              thickness='3px' 
+              emptyColor='gray.200' 
+              speed='0.5s' 
+            />
+          </Center>
+        }
+      />
+    )
+  }
+
+  if(!data.results.length){
+    return (
+      <ContainerContent 
+        message="Popular movies"
+        content={
+          <TextMessage
+            statusAlert="info"
+            startSlide={!data.length}
+            message="No popular movies"
+          />
+        }
+      />
+    )
+  }
+
+  return (
+    <ContainerContent 
+      message="Popular movies"
+      content={
+        <FirstMovies
+          numberMovies="20"
+          wrapMovies="wrap"
+          alignMovies="center"
+          justifyMovies="center"
+          dataMovies={data.results} 
+          widthMovies='200px'
+          heightMovies="300px"
+        />
+      }
+    />
   )
 }
 
 export default function Home() {
   return (
     <Layout title="Moviebase">
-      <Center h="full">
-        <MoviesContent />
-      </Center>
+      <Container>
+        <WatchMovies />
+        <HistoryMovies />
+        <PopularMovies />
+      </Container>
     </Layout>
   );
 }

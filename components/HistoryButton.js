@@ -6,25 +6,30 @@ import { fetcher } from '../utils/api';
 
 export default function HistoryButton() {
   const { id } = useRouter().query;
-  const { data } = useSWR(`/api/history/${id}`);
+  const { data: history } = useSWR(`/api/history/${id}`);
   const { mutate } = useSWRConfig();
 
   return (
-    <Tooltip label={data?.found ? 'Remove from history' : 'Add to history'}>
+    <Tooltip label={history?.found ? 'Remove from history' : 'Add to history'}>
       <IconButton
-        isLoading={!data}
-        colorScheme={data?.found ? 'green' : 'gray'}
+        _focus={{
+          outline: 'none'
+        }}
+        isLoading={!history}
+        colorScheme={history?.found ? 'teal' : 'gray'}
         size="md"
         boxShadow="md"
+        borderRadius="md"
         onClick={() => {
           mutate(`/api/history/${id}`, () =>
             fetcher(`/api/history/${id}`, {
-              method: data.found ? 'DELETE' : 'PUT',
+              method: history.found ? 'DELETE' : 'PUT',
             })
           );
         }}
+
       >
-        <CalendarIcon color={data?.found ? 'white' : 'black'} />
+        <CalendarIcon color={history?.found ? 'white' : 'black'} />
       </IconButton>
     </Tooltip>
   );

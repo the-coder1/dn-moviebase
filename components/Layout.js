@@ -6,29 +6,29 @@ import {
   Button,
   Container,
   useDisclosure,
-  HStack,
-  Stack,
   Spacer,
   VStack,
   Grid,
+  Text,
+  Flex,
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
+import { CloseIcon, HamburgerIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 
 const MenuItem = ({ href, children, ...props }) => (
   <Link href={href} passHref>
     <Button 
-      color="white" 
+      color="gray.200" 
       as="a" 
       variant="link" 
       p="3"
+      borderRadius="md"
       transition="0.25s"
       {...props} 
       _hover={{
         textDecoration: 'none',
-        color: 'green.700',
-        backgroundColor: 'white',
+        backgroundColor: "teal.800",
         boxShadow: 'md'
-       }}
+      }}
       _focus={{
         outline: 'none'
       }}
@@ -42,67 +42,75 @@ function Header() {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <Box bg="green.700">
+    <Box 
+      bg="teal.700" 
+      borderRadius="sm" 
+      boxShadow="md"
+    >
       <Container>
-        <Stack
-          as="nav"
+        <Flex
           direction={['column', , 'row']}
-          justify="space-between"
-          wrap="wrap"
-          py="0.5rem"
+          as="nav"
+          p="2"
         >
-          <HStack justify="space-between">
+          <Flex
+            align="center"
+            justify="space-between"
+          >
             <MenuItem href="/" mr={8}>
               <Heading size="lg">Moviebase</Heading>
             </MenuItem>
 
-            <Box display={['block', , 'none']} onClick={onToggle}>
-              <Button 
-                variant="outline"
-                p="2"
+            <Box
+              display={['flex', , 'none']}
+              onClick={onToggle}
+            >
+              <Button
+                variant=""
+                p="3"
+                borderRadius="md"
                 _focus={{
                   outline: 'none'
                 }} 
                 _hover={{
-                  color: 'green.700',
-                  backgroundColor: 'white',
+                  backgroundColor: 'teal.800',
                   boxShadow: 'md'
                 }}
               >
-                <HamburgerIcon w='6' h="6" />
+                {isOpen ? (<CloseIcon w='4' h="4" />) : (<HamburgerIcon w='6' h="6" />)}
               </Button>
             </Box>
-          </HStack>
+          </Flex>
 
-          <Stack
-            direction={['column', , 'row']}
-            justify="start"
-            align={['start', , 'center']}
+          <Box
             display={[isOpen ? 'flex' : 'none', , 'flex']}
-            spacing={4}
+            flexDirection={['column', , 'row']}
+            alignItems={['start', , 'center']}
           >
             <MenuItem href="/search">Search</MenuItem>
+            <MenuItem href="/genres">
+              Genres
+            </MenuItem>
             <MenuItem href="/watchlist">
               Watchlist
             </MenuItem>
             <MenuItem href="/history">
               History
             </MenuItem>
-          </Stack>
+          </Box>
 
           <Spacer />
 
-          <Stack
-            direction={['column', , 'row']}
-            justify="start"
-            align={['start', , 'center']}
+          <Box
             display={[isOpen ? 'flex' : 'none', , 'flex']}
+            alignItems="center"
           >
-            <MenuItem href="/" variant="outline">
-              What to watch
+            <MenuItem href="/what_to_watch" display="flex" alignItems="center">
+              <Text>What to watch</Text> 
+              <QuestionOutlineIcon ml="2" w='6' h="6" />
             </MenuItem>
-          </Stack>
-        </Stack>
+          </Box>
+        </Flex>
       </Container>
     </Box>
   );

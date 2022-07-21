@@ -6,27 +6,33 @@ import { fetcher } from '../utils/api';
 
 export default function WatchlistButton() {
   const { id } = useRouter().query;
-  const { data } = useSWR(`/api/watchlist/${id}`);
+  const { data: watchlist } = useSWR(`/api/watchlist/${id}`);
+  const { data: history } = useSWR(`/api/history/${id}`);
   const { mutate } = useSWRConfig();
 
   return (
-    <Tooltip label={data?.found ? 'Remove from watchlist' : 'Add to watchlist'}>
+    <Tooltip label={watchlist?.found ? 'Remove from watchlist' : 'Add to watchlist'}>
       <IconButton
-        isLoading={!data}
-        colorScheme={data?.found ? 'green' : 'gray'}
+        _focus={{
+          outline: 'none'
+        }}
+        isLoading={!watchlist}
+        colorScheme={watchlist?.found ? 'teal' : 'gray'}
         size="md"
         boxShadow="md"
+        borderRadius="md"
         onClick={() => {
           mutate(`/api/watchlist/${id}`, () =>
             fetcher(`/api/watchlist/${id}`, {
-              method: data.found ? 'DELETE' : 'PUT',
+              method: watchlist?.found ? 'DELETE' : 'PUT',
             })
           );
         }}
+        isDisabled={history?.found}
       >
-        {data?.found ? 
-          <ViewIcon color={data?.found ? 'white' : 'black'} /> :
-          <ViewOffIcon color={data?.found ? 'white' : 'black'} />
+        {watchlist?.found ? 
+          <ViewIcon color={watchlist?.found ? 'white' : 'black'} /> :
+          <ViewOffIcon color={watchlist?.found ? 'white' : 'black'} />
         }
       </IconButton>
     </Tooltip>

@@ -1,25 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import useSWR from 'swr';
 import {
   Input,
   IconButton,
   Container,
   Spinner,
-  Text,
   InputGroup,
   InputRightElement,
   VStack,
-  Box,
-  Wrap,
-  Image,
-  Flex,
-  Stack,
+  Center,
+  Heading,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Layout from '../components/Layout';
-import { buildImageUrl } from '../utils/api';
+import TextMessage from '../components/TextMessage';
+import FlexMovies from '../components/FlexMovies';
 
 function SearchBar() {
   const router = useRouter();
@@ -40,12 +36,18 @@ function SearchBar() {
   };
 
   return (
-    <InputGroup as="form" onSubmit={handleSearch}>
+    <InputGroup width={["100%", "85%", "65%", "45%"]} mb="3" mx="auto" as="form" onSubmit={handleSearch}>
       <Input
         placeholder="Search for a movie..."
         value={text}
         onChange={(event) => setText(event.target.value)}
-        borderColor='green.600'
+        borderColor='teal.500'
+        borderWidth="2px"
+        borderRadius="md"
+        boxShadow="md"
+        _hover={{
+          borderColor: 'gray.200'
+        }}
         _focus={{
           outline: 'none'
         }}
@@ -56,11 +58,13 @@ function SearchBar() {
           icon={<SearchIcon />}
           type="submit"
           color='black'
-          bg='green.600'
+          bg='teal.500'
+          boxShadow="md"
+          borderRadius="md"
           transition="0.25s"
           _hover={{
             transform: 'scale(1.2)',
-            color: 'white'
+            color: 'gray.200'
           }}
           _focus={{
             outline: 'none'
@@ -74,64 +78,68 @@ function SearchResults() {
   const { terms } = useRouter().query;
   const { data, error } = useSWR(terms && `/api/search?terms=${terms}`);
 
-  if (!terms) {
-    return <Text>Type some terms and submit for a quick search</Text>;
+  if(!terms) {
+    return (
+      <TextMessage 
+        statusAlert="warning"
+        startSlide={!terms} 
+        message="Type some terms and submit for a quick search"
+      />
+    )
   }
+
   if (error) {
     return (
-      <Text color="red">
-        Error fetching movies for {terms}: {JSON.stringify(error)}
-      </Text>
-    );
+      <TextMessage 
+        statusAlert="error"
+        startSlide={error} 
+        message={`Error fetching movies for ${terms}: ${JSON.stringify(error)}`} 
+      />
+    )
   }
-  if (!data) {
-    return <Spinner color='green.700' size="lg" isIndeterminate />;
+
+  if(!data){
+    return (
+      <Center height="200px">
+        <Spinner 
+          color='teal.500' 
+          size='xl' 
+          thickness='3px' 
+          emptyColor='gray.200' 
+          speed='0.5s' 
+        />
+      </Center>
+    )
   }
+
   if (!data.results.length) {
-    return <Text>No results</Text>;
+    return (
+      <TextMessage
+        statusAlert="info"
+        startSlide={!data.results.length}
+        message="No results!"
+      />
+    )
   }
-  console.log(data)
+
   return (
-    <Flex align="center" wrap="wrap" justify="space-around">
-      {data.results.map(({ id, title, poster_path }) => (
-        <Box key={id} boxShadow="md" bg="green.700" mx="3" my="6" borderRadius="lg" transition="0.25s" _hover={{
-          cursor: 'pointer',
-          transform: 'scale(1.1)'
-        }}>
-          <Link href={`/movies/${id}`} passHref>
-            <Flex w="auto" direction="column" align="center" p="3">
-              {poster_path && 
-                <Box minW="200px">
-                  <Image
-                    src={buildImageUrl(poster_path, 'w200')}
-                    alt="Movie poster"
-                    layout="responsive"
-                    width="200"
-                    height="350"
-                    objectFit="contain"
-                    unoptimized
-                    borderRadius="lg"
-                    boxShadow="md"
-                  />
-                </Box>
-              }
-              <Text maxW="200" align="center" mt={poster_path ? "2" : '0'}>{title}</Text>
-            </Flex>
-          </Link>
-        </Box>
-      ))}
-    </Flex>
+    <FlexMovies
+      wrapMovies="wrap"
+      alignMovies="center"
+      justifyMovies="center"
+      dataMovies={data.results}
+      widthMovies="200px"
+      heightMovies="300px"
+    />
   );
 }
 
 export default function Search() {
   return (
     <Layout title="Search">
-      <Container>
-        <VStack spacing={4} align="stretch">
-          <SearchBar />
-          <SearchResults />
-        </VStack>
+      <Container>          
+        <SearchBar />
+        <SearchResults />
       </Container>
     </Layout>
   );

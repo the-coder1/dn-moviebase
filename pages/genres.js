@@ -42,8 +42,8 @@ const GenresContent = () => {
             bg="teal.700"
             boxShadow="md" 
             m={[1, , 2]} 
-            width={['105px', , '150px']}
-            height={['60px', , '75px']}
+            width={['125px', , '150px']}
+            height={['62.5px', , '75px']}
             display="flex"
             alignItems="center"
             justifyContent="center"

@@ -5,6 +5,7 @@ import {
   Center,
   Container,
   Spinner,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import Layout from '../../components/Layout';
 import TextMessage from '../../components/TextMessage';
@@ -12,6 +13,12 @@ import FlexMovies from '../../components/FlexMovies';
 import Pagination from '../../components/Pagination';
 
 const MovieContent = () => {
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
   const { id, page } = useRouter().query;
   const { data, error } = useSWR(id && `/api/genres/${id}?page=${page}`);
 
@@ -69,7 +76,13 @@ const MovieContent = () => {
         id={id}
         dataMovies={data}
         pageMovies={page}
-        distancePages="2"
+        showPages={
+          extraSmallDevice ? "0" :
+            smallDevice ? "1" : 
+            mediumDevice ? "2" :
+            largeDevice ? "3" : 
+            extraLargeDevice && "4"
+        }
       />
     </Container>
   );

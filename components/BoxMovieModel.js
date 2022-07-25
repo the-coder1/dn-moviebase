@@ -9,7 +9,7 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
   return (
     <SlideFade 
       in={id} 
-      offsetY="-20px"
+      offsetY="50px"
     >
       <Box 
         key={id} 
@@ -20,7 +20,7 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
         _hover={{
           cursor: 'pointer',
           transform: 'scale(1.05)',
-          backgroundColor: "teal.700" 
+          backgroundColor: "teal.700"
         }}
       >
         <Link 
@@ -39,11 +39,11 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
                 layout="responsive"
                 width={widthBox}
                 height={heightBox}
-                objectFit="contain"
+                objectFit="cover"
                 borderRadius="md"
                 boxShadow="md"
                 transition="0.25s"
-                opacity={!isHover ? '1' : '0.1'}
+                opacity={!isHover ? '1' : '0.05'}
               />
             ) : (
               <Box 
@@ -75,6 +75,7 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
                 display="flex" 
                 alignItems="center" 
                 justifyContent="center" 
+                fontWeight="300"
                 transition="0.25s"
                 opacity={isHover ? '1' : '0'}
                 onMouseEnter={() => setHover(true)}

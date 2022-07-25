@@ -2,180 +2,120 @@ import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react"
 import Link from "next/link"
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
 
-export default function Pagination({ dataMovies, pageMovies, id, distancePages }) {
-  const [isMobile] = useMediaQuery("(max-width: 768px)")
+const ButtonPage = ({ keyButton, index, page, id, contentButton }) => {
+  return (
+    <Link
+      key={keyButton}
+      _hover={{ textDecoration: 'none' }}
+      _focus={{ outline: "none" }} 
+      href={`/genres/${id}?page=${index}`}
+    >
+      <Box 
+        my="2"
+        mx={page === index ? "2" : "1"}
+        p={page !== index ? ["3", , "4"] : ["4", , "5"]}
+        borderRadius={page !== index ? "sm" : "md"}
+        bg={page !== index ? "teal.600" : "teal.700"}
+        transition="0.25s"
+        isDisabled={page === index}
+        _hover={page !== index && {
+          cursor: 'pointer',
+          transform: 'scale(1.1)',
+          backgroundColor: "teal.800",
+          boxShadow: 'md',
+          borderRadius: "md",
+          m: "2"
+        }}
+      >
+        <Text>{contentButton}</Text>
+      </Box>
+    </Link>
+  )
+}
 
-  if(dataMovies){
-    const content = []
+export default function Pagination({ pageMovies, id, showPages }) {
+  const [isMobile] = useMediaQuery("(max-width: 768px)") 
 
-    for(let index = 1; index <= 20; index++){
-      content.push(
-        <Link
-          key={index}
-          _hover={{ textDecoration: 'none' }}
-          _focus={{ outline: "none" }} 
-          href={`/genres/${id}?page=${index}`}
-        >
-          <Box 
-            my="2"
-            mx={pageMovies == index && "1"}
-            p={pageMovies != index ? ["2", , "3"] : ["3", , "4"]}
-            borderRadius={pageMovies != index ? "" : "md"}
-            bg={pageMovies != index ? "teal.500" : "teal.700"}
-            transition="0.25s"
-            isDisabled={pageMovies==index}
-            _hover={pageMovies != index && {
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-              backgroundColor: "teal.800",
-              boxShadow: 'md',
-              borderRadius: "md",
-              m: "2"
-            }}
-          >
-            <Text>{index}</Text>
-          </Box>
-        </Link>
-      )
-    }
+  const page = parseInt(pageMovies)
+  const show = parseInt(showPages)
+  const content = []
 
-    if(pageMovies != 20){
-      content.push(
-        <Link
-          key="21"
-          _hover={{ textDecoration: 'none' }} 
-          href={`/genres/${id}?page=${parseInt(pageMovies) + 1}`}
-        >
-          <Box 
-            my="2"
-            p={["2", , "3"]}
-            bg="teal.500" 
-            transition="0.25s" 
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-              backgroundColor: "teal.800",
-              boxShadow: "md",
-              borderRadius: "md",
-              mx: "2"
-            }}
-          >
-            <Text>
-              {isMobile ? (
-                <ChevronRightIcon w='8' h="8" />
-              ) : "Next"}
-            </Text>
-          </Box>
-        </Link>
-      )
-    }
+  if(page !== 1){
+    content.push(
+      <ButtonPage
+        keyButton="0"
+        index={page - 1}
+        page={page}
+        id={id}
+        contentButton={
+          isMobile ? (
+            <ChevronLeftIcon w={["6", , "8"]} h={["6", , "8"]} />
+          ) : "Previous"
+        }
+      />
+    )
+  }
 
-    if(pageMovies != 1) {
-      content.unshift(
-        <Link
-          key="0"
-          _hover={{ textDecoration: 'none' }} 
-          href={`/genres/${id}?page=${parseInt(pageMovies) - 1}`}
-        >
-          <Box 
-            my="2"
-            p={["2", , "3"]}
-            bg="teal.500" 
-            transition="0.25s" 
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-              backgroundColor: "teal.800",
-              boxShadow: "md",
-              borderRadius: "md",
-              mx: '2'
-            }}
-          >
-            <Text>
-              {isMobile ? (
-                <ChevronLeftIcon w='8' h="8" />
-              ) : "Previous"}
-            </Text>
-          </Box>
-        </Link>
-      )
-    }  
+  if(page - show > 1 && !isMobile){
+    content.push(
+      <Box 
+        m="1"
+        p={["1", , "2"]}
+      >
+        <Text>.....</Text>
+      </Box>
+    )
+  }
 
-    const isMobileDevice = []
+  for(let index = (page > show ? page - show : 1); index <= (page > show ? page : show); index++){
+    content.push(
+      <ButtonPage
+        keyButton={index}
+        index={index}
+        page={page}
+        id={id}
+        contentButton={index}
+      />
+    )
+  }
+  
+  for(let index = page + 1; index < (page < 20 - show ? page + 1 + show : 21); index++){
+    content.push(
+      <ButtonPage
+        keyButton={index}
+        index={index}
+        page={page}
+        id={id}
+        contentButton={index}
+      />
+    )
+  }
 
-    if(pageMovies != 1) {
-      isMobileDevice.unshift(
-        <Link
-          key="0"
-          _hover={{ textDecoration: 'none' }} 
-          href={`/genres/${id}?page=${parseInt(pageMovies) - 1}`}
-        >
-          <Box 
-            my="2"
-            p={["2", , "3"]}
-            bg="teal.500" 
-            transition="0.25s" 
-            _hover={{
-              cursor: 'pointer',
-              transform: 'scale(1.1)',
-              backgroundColor: "teal.800",
-              boxShadow: "md",
-              borderRadius: "md",
-              mx: '2'
-            }}
-          >
-            <Text>
-              {isMobile ? (
-                <ChevronLeftIcon w='8' h="8" />
-              ) : "Previous"}
-            </Text>
-          </Box>
-        </Link>
-      )
-    }
+  if(20 - show > page && !isMobile) {
+    content.push(
+      <Box 
+        m="1"
+        p={["1", , "2"]}
+      >
+        <Text>.....</Text>
+      </Box>
+    )
+  }
 
-    if(pageMovies > distancePages){
-      if(pageMovies - parseInt(distancePages) > 1){
-        isMobileDevice.push(
-          <Box 
-            m="1"
-            p={["2", , "3"]}
-          >
-            <Text>.....</Text>
-          </Box>
-        )
-      }
-      for(let index = pageMovies - parseInt(distancePages); index <= pageMovies; index++){
-        isMobileDevice.push(
-          <Link
-            key={index}
-            _hover={{ textDecoration: 'none' }}
-            _focus={{ outline: "none" }} 
-            href={`/genres/${id}?page=${index}`}
-          >
-            <Box 
-              my="2"
-              mx={pageMovies == index && "1"}
-              p={pageMovies != index ? ["2", , "3"] : ["3", , "4"]}
-              borderRadius={pageMovies != index ? "" : "md"}
-              bg={pageMovies != index ? "teal.500" : "teal.700"}
-              transition="0.25s"
-              isDisabled={pageMovies==index}
-              _hover={pageMovies != index && {
-                cursor: 'pointer',
-                transform: 'scale(1.1)',
-                backgroundColor: "teal.800",
-                boxShadow: 'md',
-                borderRadius: "md",
-                m: "2"
-              }}
-            >
-              <Text>{index}</Text>
-            </Box>
-          </Link>
-        )
-      }
-    }
+  if(page < 20){
+    content.push(
+      <ButtonPage
+        keyButton="21"
+        index={page + 1}
+        page={page}
+        id={id}
+        contentButton={
+          isMobile ? (
+            <ChevronRightIcon w={["6", , "8"]} h={["6", , "8"]} />
+          ) : "Next"
+        }
+      />
+    )
   }
 
   return (
@@ -185,8 +125,7 @@ export default function Pagination({ dataMovies, pageMovies, id, distancePages }
       alignItems="center"
       justifyContent="center"
     >
-      
-      {isMobileDevice}
+      {content}
     </Flex>
   )
 }

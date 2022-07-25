@@ -68,7 +68,11 @@ const MovieContent = () => {
         <title>{data.title}</title>
       </Head>
 
-      <Flex align="center" justify="space-between">
+      <Flex 
+        direction={["column", , , "row"]}
+        align="center" 
+        justify="space-between"
+      >
         <Box 
           minW="300px" 
           pos="relative" 
@@ -97,7 +101,7 @@ const MovieContent = () => {
               bg="gray.700"
               borderRadius="full"
             >
-              <CircularProgressLabel>{data.vote_average}</CircularProgressLabel>
+              <CircularProgressLabel>{data.vote_average.toFixed(1)}</CircularProgressLabel>
             </CircularProgress>
           </HStack>
           <Image

@@ -1,12 +1,19 @@
-import { Center, Container, Spinner } from '@chakra-ui/react';
+import { Center, Container, Spinner, useMediaQuery } from '@chakra-ui/react';
 import Layout from '../components/Layout';
 import useSWR from 'swr';
 import FirstMovies from '../components/FirstMovies';
 import TextMessage from '../components/TextMessage';
 import ContainerContent from '../components/ContainerContent';
+import Carousel from '../components/Carousel';
 
 
 const WatchMovies = () => {
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
   const { data, error } = useSWR('/api/watchlist')
 
   if(error) {
@@ -62,11 +69,15 @@ const WatchMovies = () => {
     <ContainerContent 
       message="Movies to watch"
       content={
-        <FirstMovies
-          wrapMovies="nowrap"
-          alignMovies="center"
-          justifyMovies="start"
-          dataMovies={data} 
+        <Carousel
+          dataMovies={data}
+          showItems={
+            extraSmallDevice ? "1" :
+              smallDevice ? "1" :
+              mediumDevice ? "3" :
+              largeDevice ? "3" :
+              extraLargeDevice && "5"
+          }
           widthMovies="200px"
           heightMovies="300px"
         />
@@ -76,6 +87,12 @@ const WatchMovies = () => {
 }
 
 const HistoryMovies = () => {
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
   const { data, error } = useSWR('/api/history')
 
   if(error) {
@@ -131,11 +148,15 @@ const HistoryMovies = () => {
     <ContainerContent 
       message="Watched movies"
       content={
-        <FirstMovies
-          wrapMovies="nowrap"
-          alignMovies="center"
-          justifyMovies="start"
-          dataMovies={data} 
+        <Carousel
+          dataMovies={data}
+          showItems={
+            extraSmallDevice ? "1" :
+              smallDevice ? "1" :
+              mediumDevice ? "3" :
+              largeDevice ? "3" :
+              extraLargeDevice && "5"
+          }
           widthMovies="200px"
           heightMovies="300px"
         />
@@ -145,6 +166,12 @@ const HistoryMovies = () => {
 }
 
 const PopularMovies = () => {
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
   const { data, error } = useSWR('/api')
 
   if(error) {
@@ -198,15 +225,18 @@ const PopularMovies = () => {
 
   return (
     <ContainerContent 
-      message="Popular movies"
+      message="Movies to watch"
       content={
-        <FirstMovies
-          numberMovies="20"
-          wrapMovies="wrap"
-          alignMovies="center"
-          justifyMovies="center"
-          dataMovies={data.results} 
-          widthMovies='200px'
+        <Carousel
+          dataMovies={data.results}
+          showItems={
+            extraSmallDevice ? "1" :
+              smallDevice ? "1" :
+              mediumDevice ? "3" :
+              largeDevice ? "3" :
+              extraLargeDevice && "5"
+          }
+          widthMovies="200px"
           heightMovies="300px"
         />
       }

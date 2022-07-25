@@ -1,12 +1,19 @@
-import { Center, Container, Heading, Spinner } from '@chakra-ui/react';
+import { Center, Container, Heading, Spinner, useMediaQuery } from '@chakra-ui/react';
 import useSWR from 'swr';
 import Layout from '../components/Layout';
 import ContainerContent from '../components/ContainerContent';
 import FirstMovies from '../components/FirstMovies';
 import TextMessage from '../components/TextMessage';
+import Carousel from '../components/Carousel';
 
 const WatchlistContent = () => {
-  const { data, error } = useSWR('/api/history')
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
+  const { data, error } = useSWR('/api/watchlist')
   
   if (error) {
     return (
@@ -44,13 +51,17 @@ const WatchlistContent = () => {
   
   return (
     <ContainerContent 
-      message="Your movies to watch"
+      message="Movies to watch"
       content={
-        <FirstMovies
-          wrapMovies="nowrap"
-          alignMovies="center"
-          justifyMovies="start"
-          dataMovies={data} 
+        <Carousel
+          dataMovies={data}
+          showItems={
+            extraSmallDevice ? "1" :
+              smallDevice ? "1" :
+              mediumDevice ? "3" :
+              largeDevice ? "3" :
+              extraLargeDevice && "5"
+          }
           widthMovies="200px"
           heightMovies="300px"
         />
@@ -59,7 +70,13 @@ const WatchlistContent = () => {
   )
 }
 
-const VotedMoviesContent = () => {
+const RandomMoviesContent = () => {
+  const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
+  const [smallDevice] = useMediaQuery("(max-width: 768px)")
+  const [mediumDevice] = useMediaQuery("(max-width: 992px)")
+  const [largeDevice] = useMediaQuery("(max-width: 1200px)")
+  const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
+
   const { data, error } = useSWR(`/api/what_to_watch`)
   console.log(data)
   
@@ -91,27 +108,34 @@ const VotedMoviesContent = () => {
     return (
       <TextMessage
         status="info"
-        startSlide={!data.length}
-        message="You haven't added any movies to the viewing section!"
+        startSlide={!data[0].length}
+        message="You do not have any recommendation"
       />
     )
   }
   
   return (
-    <ContainerContent 
-      message="Most voted movies"
-      content={
-        <FirstMovies
-          wrapMovies="wrap"
-          alignMovies="center"
-          justifyMovies="start"
-          dataMovies={data} 
-          widthMovies="200px"
-          heightMovies="300px"
-          numberMovies="20"
+    <>
+      {data.map((item) => (
+        <ContainerContent 
+          message={item ? `Recommand for you: ${item.title}` : 'Recommandation'}
+          content={
+            <Carousel
+              dataMovies={item.movies.results} 
+              showItems={
+                extraSmallDevice ? "1" :
+                  smallDevice ? "1" :
+                  mediumDevice ? "3" :
+                  largeDevice ? "3" :
+                  extraLargeDevice && "5"
+              }
+              widthMovies="200px"
+              heightMovies="300px"
+            />
+          }
         />
-      }
-    />
+      ))}
+    </>
   )
 }
 
@@ -132,7 +156,7 @@ export default function WhatToWatch() {
           </Heading>
         </Center>
         <WatchlistContent />
-        <VotedMoviesContent />
+        <RandomMoviesContent />
       </Container>
     </Layout>
   );

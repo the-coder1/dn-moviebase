@@ -8,9 +8,7 @@ import {
   Spinner,
   InputGroup,
   InputRightElement,
-  VStack,
   Center,
-  Heading,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Layout from '../components/Layout';

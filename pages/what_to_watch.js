@@ -117,7 +117,8 @@ const RandomMoviesContent = () => {
   return (
     <>
       {data.map((item) => (
-        <ContainerContent 
+        <ContainerContent
+          key={item.id}
           message={item ? `Recommand for you: ${item.title}` : 'Recommandation'}
           content={
             <Carousel

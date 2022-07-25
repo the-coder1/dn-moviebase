@@ -9,6 +9,7 @@ const ButtonPage = ({ keyButton, index, page, id, contentButton }) => {
       _hover={{ textDecoration: 'none' }}
       _focus={{ outline: "none" }} 
       href={`/genres/${id}?page=${index}`}
+      passHref
     >
       <Box 
         my="2"

@@ -36,6 +36,7 @@ const GenresContent = () => {
           key={id}
           _hover={{ textDecoration: 'none' }} 
           href={`/genres/${id}?page=1`}
+          passHref
         >
           <Box
             key={id} 

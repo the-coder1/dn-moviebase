@@ -19,7 +19,7 @@ export default function HistoryButton() {
         colorScheme={history?.found ? 'teal' : 'gray'}
         size="md"
         boxShadow="md"
-        borderRadius="md"
+        borderRadius="sm"
         onClick={() => {
           mutate(`/api/history/${id}`, () =>
             fetcher(`/api/history/${id}`, {

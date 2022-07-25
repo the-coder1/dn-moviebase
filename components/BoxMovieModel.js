@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Box, Image, SlideFade, Text } from "@chakra-ui/react"
+import Image from "next/image"
+import { Box, SlideFade, Text } from "@chakra-ui/react"
 import { buildImageUrl } from "../utils/api"
 import { useState } from "react"
 
@@ -13,9 +14,11 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
     >
       <Box 
         key={id} 
+        pos="relative" 
         boxShadow="md" 
+        width={widthBox}
+        height={heightBox}
         m="2" 
-        borderRadius="md" 
         transition="0.25s" 
         _hover={{
           cursor: 'pointer',
@@ -24,54 +27,56 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
         }}
       >
         <Link 
+          width={widthBox}
+          height={heightBox}
           _hover={{ textDecoration: 'none' }} 
           href={`/movies/${id}`} 
           passHref
         >
-          <Box 
-            pos="relative" 
-            borderRadius="sm"
-          >
-            {poster_path ? (
-              <Image
-                src={buildImageUrl(poster_path, `w500`)}
-                alt="Movie poster"
-                layout="responsive"
-                width={widthBox}
-                height={heightBox}
-                objectFit="cover"
-                borderRadius="md"
-                boxShadow="md"
-                transition="0.25s"
-                opacity={!isHover ? '1' : '0.05'}
-              />
-            ) : (
-              <Box 
-                boxShadow="md" 
-                borderRadius="sm" 
-                w={widthBox} 
-                height={heightBox} 
-                display="flex" 
-                alignItems="center" 
-                justifyContent="center"
-              >
-                <Text 
-                  fontSize="lg" 
-                  align="center"
+          <Box>
+            <Box 
+              width={widthBox}
+              height={heightBox}
+              boxShadow="md"
+              transition="0.25s"
+              opacity={!isHover ? '1' : '0.05'}
+            >
+              {poster_path ? (
+                <Image
+                  src={buildImageUrl(poster_path, 'w500')}
+                  alt="Movie poster"
+                  layout="responsive"
+                  width={widthBox}
+                  height={heightBox}
+                  objectFit="cover"
+                  unoptimized
+                />
+              ) : (
+                <Box 
+                  boxShadow="md" 
+                  width={widthBox} 
+                  height={heightBox} 
+                  display="flex" 
+                  alignItems="center" 
+                  justifyContent="center"
                 >
-                  {title}
-                </Text>
-              </Box>
-            )}
+                  <Text 
+                    fontSize="lg" 
+                    align="center"
+                  >
+                    {title}
+                  </Text>
+                </Box>
+              )}
+            </Box>
             {poster_path && 
               <Box 
                 pos="absolute" 
                 bg="transparent" 
                 height="100%" 
-                width="90%" 
+                width="100%" 
                 top="0" 
-                left="5%" 
-                borderRadius="2xl" 
+                left="0" 
                 display="flex" 
                 alignItems="center" 
                 justifyContent="center" 
@@ -82,6 +87,7 @@ export default function BoxMovieModel({ id, title, poster_path, widthBox, height
                 onMouseLeave={() => setHover(false)}
               >
                 <Text 
+                  width="90%"
                   fontSize="lg" 
                   align="center"
                 >

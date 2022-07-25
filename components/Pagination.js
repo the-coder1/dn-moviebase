@@ -15,7 +15,7 @@ const ButtonPage = ({ keyButton, index, page, id, contentButton }) => {
         my="2"
         mx={page === index ? "2" : "1"}
         p={page !== index ? ["3", , "4"] : ["4", , "5"]}
-        borderRadius={page !== index ? "sm" : "md"}
+        borderRadius={page !== index ? "none" : "sm"}
         bg={page !== index ? "teal.600" : "teal.700"}
         transition="0.25s"
         isDisabled={page === index}
@@ -24,7 +24,7 @@ const ButtonPage = ({ keyButton, index, page, id, contentButton }) => {
           transform: 'scale(1.1)',
           backgroundColor: "teal.800",
           boxShadow: 'md',
-          borderRadius: "md",
+          borderRadius: "sm",
           m: "2"
         }}
       >

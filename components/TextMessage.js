@@ -12,7 +12,7 @@ export default function TextMessage({ startSlide, statusAlert, message }){
         <Alert 
           status={statusAlert} 
           variant="solid" 
-          boxShadow="md" 
+          boxShadow="sm" 
           fontSize="lg" 
           p="3" 
           mx="auto"

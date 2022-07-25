@@ -21,7 +21,7 @@ const MenuItem = ({ href, children, ...props }) => (
       as="a" 
       variant="link" 
       p="3"
-      borderRadius="md"
+      borderRadius="sm"
       transition="0.25s"
       {...props} 
       _hover={{
@@ -68,7 +68,7 @@ function Header() {
               <Button
                 variant=""
                 p="3"
-                borderRadius="md"
+                borderRadius="sm"
                 _focus={{
                   outline: 'none'
                 }} 

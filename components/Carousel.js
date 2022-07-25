@@ -9,7 +9,7 @@ const ArrowBox = ({ arrow, move }) => {
       cursor="pointer"
       mx="5"
       p="0"
-      borderRadius="md"
+      borderRadius="sm"
       boxShadow="md"
       bg="gray.700"
       transition="0.25s"

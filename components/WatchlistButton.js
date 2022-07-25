@@ -20,7 +20,7 @@ export default function WatchlistButton() {
         colorScheme={watchlist?.found ? 'teal' : 'gray'}
         size="md"
         boxShadow="md"
-        borderRadius="md"
+        borderRadius="sm"
         onClick={() => {
           mutate(`/api/watchlist/${id}`, () =>
             fetcher(`/api/watchlist/${id}`, {

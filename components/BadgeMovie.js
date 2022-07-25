@@ -6,7 +6,7 @@ export default function BadgeMovie({ variantBadge, content, colorBadge }) {
       colorScheme="teal"
       variant={variantBadge}
       p="2" 
-      borderRadius="md" 
+      borderRadius="sm" 
       color={colorBadge}
       m="1"
     >

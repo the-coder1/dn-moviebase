@@ -48,7 +48,7 @@ const GenresContent = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            borderRadius="md" 
+            borderRadius="sm" 
             transition="0.25s" 
             _hover={{
               cursor: 'pointer',

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import Image from "next/image"
 import Head from 'next/head';
 import useSWR from 'swr';
 import { buildImageUrl } from '../../utils/api';
@@ -21,7 +21,6 @@ import HistoryButton from '../../components/HistoryButton';
 import WatchlistButton from '../../components/WatchlistButton';
 import BadgeMovie from '../../components/BadgeMovie';
 import TextMessage from '../../components/TextMessage';
-import Link from 'next/link';
 
 const MovieContent = () => {
   const { id } = useRouter().query;
@@ -106,14 +105,26 @@ const MovieContent = () => {
           </HStack>
           <Image
             src={buildImageUrl(data.poster_path, 'w500')}
-            alt="Movie poster"
             layout="responsive"
-            width="300"
-            height="450"
-            borderRadius='md'
-            objectFit="contain"
+            width="300px"
+            height="450px"
             unoptimized
           />
+          {!data.poster_path && (
+            <Flex
+              width="300px"
+              height="450px"
+              borderRadius='md'
+              bg="red"
+              pos="absolute"
+              top="0"
+              left="0"
+              align="center"
+              justify="center"
+            >
+              <Text>{data.title}</Text>
+            </Flex>
+          )}
         </Box>
         <Box>
           <Box p="2">

@@ -37,8 +37,8 @@ export default function Carousel({ dataMovies, showItems, widthMovies, heightMov
 
   const content = []
 
-  if(dataMovies.length <= showItems) {
-    for(let index = current; index < dataMovies.length; index++) {
+  if(dataMovies?.length <= showItems) {
+    for(let index = current; index < dataMovies?.length; index++) {
       content.push(
         <BoxMovieModel 
             key={dataMovies[index].id}
@@ -51,7 +51,7 @@ export default function Carousel({ dataMovies, showItems, widthMovies, heightMov
       )
     }
   } else {
-    if(current <= dataMovies.length - show){
+    if(current <= dataMovies?.length - show){
       for(let index = current; index < show + current; index++) {
         content.push(
           <BoxMovieModel 
@@ -100,17 +100,17 @@ export default function Carousel({ dataMovies, showItems, widthMovies, heightMov
       justify="center"
       my="3"
     >
-      {show < dataMovies.length && (
+      {show < dataMovies?.length && (
         <ArrowBox 
           arrow={<ChevronLeftIcon w="10" h="10" />}
-          move={() => setCurrentPage(current === 0 ? dataMovies.length - 1 : current - 1)}
+          move={() => setCurrentPage(current === 0 ? dataMovies?.length - 1 : current - 1)}
         />
       )}
       {content}
-      {show < dataMovies.length && (
+      {show < dataMovies?.length && (
         <ArrowBox
           arrow={<ChevronRightIcon w="10" h="10" />}
-          move={() => setCurrentPage(current + show === dataMovies.length + show - 1 ? 0 : current + 1)}
+          move={() => setCurrentPage(current + show === dataMovies?.length + show - 1 ? 0 : current + 1)}
         />
       )}
     </Flex>

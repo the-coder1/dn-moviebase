@@ -25,7 +25,6 @@ import TextMessage from '../../components/TextMessage';
 const MovieContent = () => {
   const { id } = useRouter().query;
   const { data, error } = useSWR(id && `/api/movies/${id}`);
-  console.log(data)
 
   if (error) {
     return (

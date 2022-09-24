@@ -1,10 +1,12 @@
 import { Center, Container, Heading, Spinner, useMediaQuery } from '@chakra-ui/react';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import Layout from '../components/Layout';
 import ContainerContent from '../components/ContainerContent';
 import FirstMovies from '../components/FirstMovies';
 import TextMessage from '../components/TextMessage';
 import Carousel from '../components/Carousel';
+import { fetcher } from '../utils/api';
+import { useEffect } from 'react';
 
 const WatchlistContent = () => {
   const [extraSmallDevice] = useMediaQuery("(max-width: 600px)")
@@ -78,7 +80,14 @@ const RandomMoviesContent = () => {
   const [extraLargeDevice] = useMediaQuery("(min-width: 1200px)")
 
   const { data, error } = useSWR(`/api/what_to_watch`)
-  console.log(data)
+
+  useEffect(() => {
+    if (!data?.[0].movies || !data?.[1].movies || !data?.[2].movies) {
+      mutate(`/api/what_to_watch`, () =>
+        fetcher(`/api/what_to_watch`)
+      );
+    }
+  }, [data])
   
   if (error) {
     return (
@@ -89,8 +98,9 @@ const RandomMoviesContent = () => {
       />
     )
   }
+  console.log(data)
 
-  if(!data){
+  if(!data || !data?.[0].movies || !data?.[1].movies || !data?.[2].movies){
     return (
       <Center height="200px">
         <Spinner 
@@ -108,7 +118,7 @@ const RandomMoviesContent = () => {
     return (
       <TextMessage
         status="info"
-        startSlide={!data[0].length}
+        startSlide={!data[0]?.length}
         message="You do not have any recommendation"
       />
     )
@@ -122,7 +132,7 @@ const RandomMoviesContent = () => {
           message={item ? `Recommand for you: ${item.title}` : 'Recommandation'}
           content={
             <Carousel
-              dataMovies={item.movies.results} 
+              dataMovies={item?.movies?.results} 
               showItems={
                 extraSmallDevice ? "1" :
                   smallDevice ? "1" :

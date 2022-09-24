@@ -11,6 +11,8 @@ import {
   Grid,
   Text,
   Flex,
+  ColorModeScript,
+  theme,
 } from '@chakra-ui/react';
 import { CloseIcon, HamburgerIcon, QuestionOutlineIcon } from '@chakra-ui/icons';
 
